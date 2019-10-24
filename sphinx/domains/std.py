@@ -770,7 +770,7 @@ class StandardDomain(Domain):
                           node: pending_xref, contnode: Element) -> Element:
         # directly reference to document by source name; can be absolute or relative
         refdoc = node.get('refdoc', fromdocname)
-        docname = docname_join(refdoc, node['reftarget'])
+        docname, _, anchor = docname_join(refdoc, node['reftarget']).partition('#')
         if docname not in env.all_docs:
             return None
         else:
@@ -780,7 +780,7 @@ class StandardDomain(Domain):
             else:
                 caption = clean_astext(env.titles[docname])
             innernode = nodes.inline(caption, caption, classes=['doc'])
-            return make_refnode(builder, fromdocname, docname, None, innernode)
+            return make_refnode(builder, fromdocname, docname, anchor, innernode)
 
     def _resolve_option_xref(self, env: "BuildEnvironment", fromdocname: str,
                              builder: "Builder", typ: str, target: str,
